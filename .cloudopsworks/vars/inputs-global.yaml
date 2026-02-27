@@ -1,18 +1,18 @@
-organization_name: "ORG_NAME"
-organization_unit: "ORG_UNIT"
-environment_name: "ENV_NAME"
-repository_owner: "REPO_OWNER" # Required
+organization_name: "CloudOpsWorrks"
+organization_unit: "Blueprints"
+environment_name: "actions-runner"
+repository_owner: "cloudopsworks" # Required
 #
 ## Default image version is "node:18-alpine" and default run command is npm run start
 ## modify docker_image and docker_inline parameters to match the proper configuration needed
-#docker_image: docker/image:version-xxx
+docker_image: ghcr.io/actions/actions-runner:latest
 # Set Snyk processing to true if want to enable, the tool is disabled by default
 #snyk:
 #  enabled: true
 #
 # Set Semgrep processing to true if want to enable, the tool is disabled by default
-#semgrep:
-#  enabled: true
+semgrep:
+  enabled: true
 #
 # Set Sonarqube processing to true if want to enable, the tool is disabled by default
 #sonarqube:
@@ -45,14 +45,26 @@ repository_owner: "REPO_OWNER" # Required
 #  enabled: true
 #
 # Dockerfile Inline content that will be merged into the Dockerfile
-#docker_inline: |
-#  # Dockerfile content here
-#  # Example:
-#  # FROM node:14-alpine as test
-#  # WORKDIR /app
-#  # COPY package*.json ./
-#  # FROM customized # customized stage is required to get back to the original stage to copy files
-#  # COPY --from test ./mydir ./my dest
+docker_inline: |
+  # Dockerfile content here
+  
+  WORKDIR /tmp
+  
+  RUN sudo apt update
+  RUN sudo apt-get -y install wget gh jq curl zip unzip python3 python3-pip apt-transport-https ca-certificates gnupg lsb-release
+  RUN sudo wget https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64 -O /usr/bin/yq && sudo chmod +x /usr/bin/yq
+  RUN curl -sL "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+  RUN unzip -qo awscliv2.zip
+  RUN type -p aws > /dev/null || sudo ./aws/install
+  RUN type -p aws > /dev/null && sudo ./aws/install --update
+  RUN aws --version
+  RUN (type -p az > /dev/null || (echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/microsoft.gpg] https://packages.microsoft.com/repos/azure-cli/ jammy main" | sudo tee -a /etc/apt/sources.list.d/azure-cli.list && sudo mkdir -p /etc/apt/keyrings && curl -sLS https://packages.microsoft.com/keys/microsoft.asc | sudo gpg --dearmor -o /etc/apt/keyrings/microsoft.gpg && sudo chmod go+r /etc/apt/keyrings/microsoft.gpg && sudo apt-get update -y && sudo apt-get install azure-cli -y))
+  RUN sudo az extension add --name azure-devops
+  RUN sudo az extension add --name aks-preview
+  RUN az --version
+  RUN (type -p gcloud > /dev/null || (echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] https://packages.cloud.google.com/apt cloud-sdk main" | sudo tee -a /etc/apt/sources.list.d/google-cloud-sdk.list && curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo gpg --dearmor -o /usr/share/keyrings/cloud.google.gpg && sudo apt-get update -y && sudo apt-get install google-cloud-cli -y))
+  RUN gcloud --version
+  WORKDIR /home/runner
 #
 # Docker Arguments that will be passed to Docker Build Process
 #docker_args: |
@@ -108,8 +120,8 @@ repository_owner: "REPO_OWNER" # Required
 #
 ## CD pipeline configuration uncomment and configure accordingly to enable
 # Target Cloud
-cloud: aws | azure | gcp
+cloud: gcp
 # Cloud deployment type depends on the target cloud
-cloud_type: beanstalk | eks | lambda | aks | webapp | function | gke | appengine | cloudrun | kubernetes
+cloud_type: kubernetes
 # Indicate the Runner that will be used for the deployment - usually will be a hosted runner
 # runner_set: "arc-runner-set"
