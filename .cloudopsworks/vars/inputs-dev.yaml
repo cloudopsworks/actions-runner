@@ -1,7 +1,7 @@
 # This file contains the environment variables for the Kubernetes deployment
 environment: "dev"
 #runner_set: "RUNNER-ENV"
-disable_deploy: true
+#disable_deploy: true
 container_registry: ghcr.io
 cluster_name: CLUSTER_NAME
 namespace: NAMESPACE
