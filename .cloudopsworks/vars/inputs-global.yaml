@@ -56,7 +56,7 @@ docker_inline: |
   RUN curl -sL "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
   RUN unzip -qo awscliv2.zip
   RUN type -p aws > /dev/null || ./aws/install
-  RUN type -p aws > /dev/null && ./aws/install --update
+  # RUN type -p aws > /dev/null && ./aws/install --update
   RUN aws --version
   RUN (type -p az > /dev/null || (echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/microsoft.gpg] https://packages.microsoft.com/repos/azure-cli/ jammy main" | tee -a /etc/apt/sources.list.d/azure-cli.list && mkdir -p /etc/apt/keyrings && curl -sLS https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor -o /etc/apt/keyrings/microsoft.gpg && chmod go+r /etc/apt/keyrings/microsoft.gpg && apt-get update -y && apt-get install azure-cli -y))
   RUN az extension add --name azure-devops
