@@ -43,7 +43,6 @@ semgrep:
 # Set if this is a library project
 is_library: true
 #
-
 # Set Trivy processing to true if want to enable, the tool is disabled by default
 #trivy:
 #  enabled: true
@@ -71,8 +70,9 @@ docker_inline: |
   WORKDIR /home/runner
 #
 # Docker Arguments that will be passed to Docker Build Process
-#docker_args: |
-#  ARG1=value1
+docker_args: |
+  USER_ID=runner
+  GROUP_ID=runner
 #  ARG2=value2
 #  ARG3=value3
 #
@@ -81,7 +81,8 @@ docker_inline: |
 #
 # Custom User Group Command, this command can be uncommented in some cases to cover the proper
 # User creation on images like based on Busybox or Redhat UBI-8/9 or Fedora
-#custom_usergroup: |
+custom_usergroup: |
+  echo "Custom User Group disabled for this image, using default user and group provided by the base image"
 #  groupadd --gid $GROUP_ID --system $GROUP_NAME \
 #    && useradd --uid $USER_ID --system --gid $GROUP_ID --home /app/webapp $USER_NAME
 #
