@@ -71,8 +71,9 @@ docker_inline: |
 #
 # Docker Arguments that will be passed to Docker Build Process
 docker_args: |
-  USER_ID=runner
-  GROUP_ID=runner
+  USER_ID=1001
+  USER_NAME=runner
+  GROUP_NAME=runner
 #  ARG2=value2
 #  ARG3=value3
 #
