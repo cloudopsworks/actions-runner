@@ -40,6 +40,9 @@ semgrep:
 #  enabled: true
 #  type: Application
 #
+# Set if this is a library project
+is_library: true
+#
 # Set Trivy processing to true if want to enable, the tool is disabled by default
 #trivy:
 #  enabled: true
@@ -48,27 +51,31 @@ semgrep:
 docker_inline: |
   # Dockerfile content here
   
-  WORKDIR /tmp
+  RUN mkdir -p /tmp/install-image
+  WORKDIR /tmp/install-image
   
-  RUN sudo apt update
-  RUN sudo apt-get -y install wget gh jq curl zip unzip python3 python3-pip apt-transport-https ca-certificates gnupg lsb-release
-  RUN sudo wget https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64 -O /usr/bin/yq && sudo chmod +x /usr/bin/yq
+  RUN apt-get update
+  RUN apt-get -y install wget gh jq curl zip unzip python3 python3-pip apt-transport-https ca-certificates gnupg lsb-release
+  RUN wget https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64 -O /usr/bin/yq && chmod +x /usr/bin/yq
   RUN curl -sL "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
   RUN unzip -qo awscliv2.zip
-  RUN type -p aws > /dev/null || sudo ./aws/install
-  RUN type -p aws > /dev/null && sudo ./aws/install --update
+  RUN type -p aws > /dev/null || ./aws/install
+  # RUN type -p aws > /dev/null && ./aws/install --update
   RUN aws --version
-  RUN (type -p az > /dev/null || (echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/microsoft.gpg] https://packages.microsoft.com/repos/azure-cli/ jammy main" | sudo tee -a /etc/apt/sources.list.d/azure-cli.list && sudo mkdir -p /etc/apt/keyrings && curl -sLS https://packages.microsoft.com/keys/microsoft.asc | sudo gpg --dearmor -o /etc/apt/keyrings/microsoft.gpg && sudo chmod go+r /etc/apt/keyrings/microsoft.gpg && sudo apt-get update -y && sudo apt-get install azure-cli -y))
-  RUN sudo az extension add --name azure-devops
-  RUN sudo az extension add --name aks-preview
+  RUN (type -p az > /dev/null || (echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/microsoft.gpg] https://packages.microsoft.com/repos/azure-cli/ jammy main" | tee -a /etc/apt/sources.list.d/azure-cli.list && mkdir -p /etc/apt/keyrings && curl -sLS https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor -o /etc/apt/keyrings/microsoft.gpg && chmod go+r /etc/apt/keyrings/microsoft.gpg && apt-get update -y && apt-get install azure-cli -y))
+  RUN az extension add --name azure-devops
+  RUN az extension add --name aks-preview
   RUN az --version
-  RUN (type -p gcloud > /dev/null || (echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] https://packages.cloud.google.com/apt cloud-sdk main" | sudo tee -a /etc/apt/sources.list.d/google-cloud-sdk.list && curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo gpg --dearmor -o /usr/share/keyrings/cloud.google.gpg && sudo apt-get update -y && sudo apt-get install google-cloud-cli -y))
+  RUN (type -p gcloud > /dev/null || (echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] https://packages.cloud.google.com/apt cloud-sdk main" | tee -a /etc/apt/sources.list.d/google-cloud-sdk.list && curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | gpg --dearmor -o /usr/share/keyrings/cloud.google.gpg && apt-get update -y && apt-get install google-cloud-cli -y))
   RUN gcloud --version
+  
   WORKDIR /home/runner
 #
 # Docker Arguments that will be passed to Docker Build Process
-#docker_args: |
-#  ARG1=value1
+docker_args: |
+  USER_ID=1001
+  USER_NAME=runner
+  GROUP_NAME=runner
 #  ARG2=value2
 #  ARG3=value3
 #
@@ -77,7 +84,8 @@ docker_inline: |
 #
 # Custom User Group Command, this command can be uncommented in some cases to cover the proper
 # User creation on images like based on Busybox or Redhat UBI-8/9 or Fedora
-#custom_usergroup: |
+custom_usergroup: |
+  echo "Custom User Group disabled for this image, using default user and group provided by the base image"
 #  groupadd --gid $GROUP_ID --system $GROUP_NAME \
 #    && useradd --uid $USER_ID --system --gid $GROUP_ID --home /app/webapp $USER_NAME
 #
