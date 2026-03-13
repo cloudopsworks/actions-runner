@@ -44,8 +44,8 @@ semgrep:
 is_library: true
 #
 # Set Trivy processing to true if want to enable, the tool is disabled by default
-#trivy:
-#  enabled: true
+trivy:
+  enabled: true
 #
 # Dockerfile Inline content that will be merged into the Dockerfile
 docker_inline: |
