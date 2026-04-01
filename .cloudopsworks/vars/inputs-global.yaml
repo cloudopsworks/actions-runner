@@ -55,6 +55,7 @@ docker_inline: |
   WORKDIR /tmp/install-image
   
   RUN apt-get update
+  RUN apt-get -y upgrade
   RUN apt-get -y install wget gh jq curl zip unzip python3 python3-pip apt-transport-https ca-certificates gnupg lsb-release
   RUN wget https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64 -O /usr/bin/yq && chmod +x /usr/bin/yq
   RUN curl -sL "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
