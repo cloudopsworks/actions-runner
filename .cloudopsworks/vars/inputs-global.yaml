@@ -5,7 +5,7 @@ repository_owner: "cloudopsworks" # Required
 #
 ## Default image version is "node:18-alpine" and default run command is npm run start
 ## modify docker_image and docker_inline parameters to match the proper configuration needed
-docker_image: ghcr.io/actions/actions-runner:latest
+docker_image: ghcr.io/actions/actions-runner:2.334.0
 # Set Snyk processing to true if want to enable, the tool is disabled by default
 #snyk:
 #  enabled: true
@@ -55,6 +55,7 @@ docker_inline: |
   WORKDIR /tmp/install-image
   
   RUN apt-get update
+  RUN apt-get -y upgrade
   RUN apt-get -y install wget gh jq curl zip unzip python3 python3-pip apt-transport-https ca-certificates gnupg lsb-release
   RUN wget https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64 -O /usr/bin/yq && chmod +x /usr/bin/yq
   RUN curl -sL "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
