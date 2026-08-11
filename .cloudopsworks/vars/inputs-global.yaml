@@ -132,7 +132,7 @@ custom_usergroup: |
 #
 ## CD pipeline configuration uncomment and configure accordingly to enable
 # Target Cloud
-cloud: aws
+cloud: gcp
 # Cloud deployment type depends on the target cloud
 cloud_type: kubernetes
 # Indicate the Runner that will be used for the deployment - usually will be a hosted runner
