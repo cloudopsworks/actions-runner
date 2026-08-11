@@ -5,7 +5,7 @@ repository_owner: "cloudopsworks" # Required
 #
 ## Default image version is "node:18-alpine" and default run command is npm run start
 ## modify docker_image and docker_inline parameters to match the proper configuration needed
-docker_image: ghcr.io/actions/actions-runner:2.334.0
+docker_image: ghcr.io/actions/actions-runner:2.336.0
 # Set Snyk processing to true if want to enable, the tool is disabled by default
 #snyk:
 #  enabled: true
