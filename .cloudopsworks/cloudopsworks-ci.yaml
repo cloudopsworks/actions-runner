@@ -40,9 +40,9 @@ config:
   # https://docs.github.com/en/rest/reference/repos#update-branch-protection
   branchProtection: true
   # Configure the repository to enable conventional commits Ruleset - This requires PRO/Enterprise/Teams Paid Plan to work, Free plans not-supported.
-  conventionalCommitsEnabled: false
+  conventionalCommitsEnabled: true
   # Configure the repository to enforce conventional commits
-  enforceConventionalCommits: false
+  enforceConventionalCommits: true
   # Configure the repository to enforce custom commits messages pattern
   enforceCustomCommitsPattern: false
   enforceCustomCommitsPatternRegex: "PROJECT-[0-9]+" #sample regex to enforce commit messages to have a JIRA ticket number in the format PROJECT-1234
@@ -56,7 +56,13 @@ config:
     - "*.tfvars"
     - OWNERS
     - Makefile
-    - .github
+    - README-TEMPLATE.md
+    - .github/**/*
+    - .cloudopsworks/cloudopsworks-ci.yaml
+    - .cloudopsworks/gitversion*
+    - .cloudopsworks/.docker
+    - .cloudopsworks/labeler.yml
+    - .cloudopsworks/_VERSION
 
   # Optional only needed if not automatic or protection is true & Further review is needed for merging on Master/Main
   requiredReviewers: 1
@@ -157,4 +163,4 @@ cd:
 
 
 ############ DO NOT MODIFY BELOW ############
-#workflow-version-tag: v5.10.32 - hash: 1934f51993f00b258f635e558b2a56abd2db5891
+#workflow-version-tag: v5.10.38 - hash: af840215bec7886cdbbafbc75f9ad52b885387a1
