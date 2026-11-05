@@ -1,3 +1,5 @@
+# This file contains the global variables that will be used across all pipelines,
+# these variables can be overwritten by the pipeline specific variables defined in .cloudopsworks/vars/inputs-<pipeline>.yaml
 organization_name: "CloudOpsWorrks"
 organization_unit: "Blueprints"
 environment_name: "actions-runner"
@@ -14,7 +16,7 @@ docker_image: ghcr.io/actions/actions-runner:2.337.0
 semgrep:
   enabled: true
 #
-# Set Trivy processing to true if want to enable, the tool is disabled by default
+# Set Trivy processing to true if want to enable Docker Image scan, the tool is disabled by default
 trivy:
   enabled: true
 #
@@ -74,17 +76,25 @@ docker_inline: |
 
   RUN rm -fr /tmp/install-image
 
+#  # Dockerfile content here
+#  # Example:
+#  # FROM node:14-alpine as test
+#  # WORKDIR /app
+#  # COPY package*.json ./
+#  # FROM customized # customized stage is required to get back to the original stage to copy files
+#  # COPY --from test ./mydir ./my dest
 #
 # Docker Arguments that will be passed to Docker Build Process
 docker_args: |
   USER_ID=1001
   USER_NAME=runner
   GROUP_NAME=runner
+#  ARG1=value1
 #  ARG2=value2
 #  ARG3=value3
 #
 # Custom command that will be placed as startup script in dockerfile
-#custom_run_command: npm run start
+#custom_run_command: alternate_script.sh
 #
 # Custom User Group Command, this command can be uncommented in some cases to cover the proper
 # User creation on images like based on Busybox or Redhat UBI-8/9 or Fedora
